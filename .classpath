@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="TFG_Admin/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/BD/mysql-connector-java-5.1.42/mysql-connector-java-5.1.42-bin.jar"/>
 	<classpathentry kind="output" path="TFG_Admin/bin"/>
 </classpath>
