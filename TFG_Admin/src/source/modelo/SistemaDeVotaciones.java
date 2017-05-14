@@ -17,11 +17,11 @@ public class SistemaDeVotaciones {
 	}
 
 	public void iniciar(String codV,String descrip, Date Fecha){
-		
+		GestorVotacion.getGVotacion().iniciar(codV, descrip, Fecha);
 	}
 	
 	public void detener(){
-		
+		GestorVotacion.getGVotacion().detener();
 	}
 	
 	public void obtHistorico(String codV, Date Fecha){
@@ -38,6 +38,10 @@ public class SistemaDeVotaciones {
 	
 	public void generarVotacion(String Provincia, ArrayList<String> alternativasParaLaVotacion){
 		
+	}
+
+	public ArrayList<Votacion> obtVotacionesSinRealizar(){
+		return GestorVotacion.getGVotacion().obtVotacionesNoRealizadas();
 	}
 	
 	public void addVotanes(String ruta){

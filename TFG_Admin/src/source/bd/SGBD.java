@@ -83,22 +83,28 @@ public class SGBD {
 		return Resultado;
 	}	
      
-	public static ResultSet consultaDatos(Statement st, String cadena) {
-        ResultSet rs = null;
-        try {
-            rs = st.executeQuery(cadena);
-        } catch (SQLException e) {
-            System.out.println("Error con: " + cadena);
-            System.out.println("SQLException: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return rs;
-    }
+	
 	
 	/*****************************************************************************************************************
      * M�todo para realizar consultas de actualizaci�n, creaci�n o eliminaci�n (DROP,INSERT INTO, ALTER...,NO SELECT * 
      *****************************************************************************************************************/
     
+	public void UpdateIniciarVotacion(String SentenciaSQL, String codV, Date date){
+		this.SentenciaSQL = SentenciaSQL;
+		try{
+			
+			PreparedStatement ps = conexion.prepareStatement(SentenciaSQL);
+			
+				ps.setDate(1, date);
+				ps.setString(2, codV);
+				ps.executeUpdate();
+				
+				System.out.println(ps.toString());
+		}catch(SQLException e){
+			e.getMessage();			
+		}
+	}
+	
     
     public void Update(String SentenciaSQL, String[] buffer){
 		this.SentenciaSQL = SentenciaSQL;
