@@ -67,16 +67,21 @@ public class SGBD {
         }
         return st;
     }
+	
+	
  
+	public static Connection getConnection() {
+		return conexion;
+	}
+
 	/*************************************************************************
      * M�todo para realizar consultas del tipo: SELECT * FROM tabla WHERE..."*
-     *************************************************************************/
+     *************************************************************************/	
 	
-	public ResultSet Select(String SentenciaSQL){
-		this.SentenciaSQL = SentenciaSQL;
+	public ResultSet Select(PreparedStatement ps){
 		
 		try{
-			this.Resultado = statement.executeQuery(this.SentenciaSQL);
+			this.Resultado = ps.executeQuery();
 		}catch(SQLException e){
 			e.getMessage();			
 		}
@@ -89,38 +94,14 @@ public class SGBD {
      * M�todo para realizar consultas de actualizaci�n, creaci�n o eliminaci�n (DROP,INSERT INTO, ALTER...,NO SELECT * 
      *****************************************************************************************************************/
     
-	public void UpdateIniciarVotacion(String SentenciaSQL, String codV, Date date){
-		this.SentenciaSQL = SentenciaSQL;
+	public void Update(PreparedStatement ps){
 		try{
-			
-			PreparedStatement ps = conexion.prepareStatement(SentenciaSQL);
-			
-				ps.setDate(1, date);
-				ps.setString(2, codV);
-				ps.executeUpdate();
-				
-				System.out.println(ps.toString());
+			ps.executeUpdate();
 		}catch(SQLException e){
 			e.getMessage();			
 		}
 	}
 	
-    
-    public void Update(String SentenciaSQL, String[] buffer){
-		this.SentenciaSQL = SentenciaSQL;
-		try{
-			
-			PreparedStatement ps = conexion.prepareStatement(SentenciaSQL);
-			for(int i=0; i<buffer.length; i++){
-				ps.setString(i+1, buffer[i]);
-			}
-				ps.executeUpdate();
-				
-				System.out.println(ps.toString());
-		}catch(SQLException e){
-			e.getMessage();			
-		}
-	}
     
     /*********************************
      * M�todo para cerrar la consula *

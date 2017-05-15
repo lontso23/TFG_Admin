@@ -16,7 +16,7 @@ public class SistemaDeVotaciones {
 		return miSistema;
 	}
 
-	public void iniciar(String codV,String descrip, Date Fecha){
+	public void iniciar(int codV,String descrip, Date Fecha){
 		GestorVotacion.getGVotacion().iniciar(codV, descrip, Fecha);
 	}
 	
@@ -24,15 +24,15 @@ public class SistemaDeVotaciones {
 		GestorVotacion.getGVotacion().detener();
 	}
 	
-	public void obtHistorico(String codV, Date Fecha){
+	public void obtHistorico(int codV, Date Fecha){
 		
 	}
 	
-	public void obtResultadosGenerales(String codV, Date Fecha){
+	public void obtResultadosGenerales(int codV, Date Fecha){
 		
 	}
 	
-	public void obtActasLocales(String codV, Date Fecha){
+	public void obtActasLocales(int codV, Date Fecha){
 		
 	}
 	
