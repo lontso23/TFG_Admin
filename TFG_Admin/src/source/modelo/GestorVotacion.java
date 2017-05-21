@@ -1,5 +1,9 @@
 package source.modelo;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +11,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import source.bd.SGBD;
 
@@ -136,8 +142,14 @@ public class GestorVotacion {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				Alternativa a = new Alternativa(r.getString("Nombre"), r.getString("Logo"), r.getString("Descripcion"));
-				alter.add(a);
+				 Blob blob = r.getBlob("Logo");
+				 byte[] data = blob.getBytes(1, (int)blob.length());
+				 BufferedImage img = null;
+				 try {
+					img = ImageIO.read(new ByteArrayInputStream(data));
+					Alternativa a = new Alternativa(r.getString("Nombre"), img, r.getString("Descripcion"));
+					alter.add(a);
+				} catch (IOException e) {e.printStackTrace();}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

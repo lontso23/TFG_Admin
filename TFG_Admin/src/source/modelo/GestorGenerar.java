@@ -1,5 +1,8 @@
 package source.modelo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,15 +84,20 @@ public class GestorGenerar {
 	}
 	
 
-	public void addAlternativaNueva(String nombre, String descrip, InputStream rutafoto){
+	public void addAlternativaNueva(String nombre, String descrip, String rutafoto){
 		String sentencia = "INSERT INTO Alternativa(Nombre, Logo, Descripcion) VALUES (?,?,?)";
-		PreparedStatement ps;
+		File f = new File(rutafoto);
+		FileInputStream fis;
 		try {
-			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
-			ps.setString(1, nombre);
-			ps.setBlob(2, rutafoto);//TODO lo de la foto
-			ps.setString(3,descrip);
-			SGBD.getConexion().Update(ps);
+			try {
+				fis = new FileInputStream(f);
+				PreparedStatement ps;
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setString(1, nombre);
+				ps.setBlob(2, fis, f.length());
+				ps.setString(3,descrip);
+				SGBD.getConexion().Update(ps);
+			} catch (FileNotFoundException e) {e.printStackTrace();}
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -99,13 +107,12 @@ public class GestorGenerar {
 	private void addAlternativas( ArrayList<Alternativa> l){
 		for(int i=0; i< l.size();i++){
 			Alternativa act = l.get(i);
-			String sentencia = "INSERT INTO VotosGeneral(CodV, Alternativa, NumVotos) VALUES (?,?,?)";
+			String sentencia = "INSERT INTO VotosGeneral(CodV, Alternativa) VALUES (?,?)";
 			PreparedStatement ps;
 			try {
 				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 				ps.setInt(1, getCodVotacion());
 				ps.setString(2, act.getNombre());
-				ps.setInt(3,0);
 				SGBD.getConexion().Update(ps);
 			} catch (SQLException e) {
 				

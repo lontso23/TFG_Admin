@@ -1,12 +1,15 @@
 package source.modelo;
 
+import java.awt.Image;
+
+
 public class Alternativa {
 
 	private String nombre;
-	private String logo;
+	private Image logo;
 	private String descrip;
 	
-	public Alternativa(String n, String logo, String des){
+	public Alternativa(String n, Image logo, String des){
 		this.nombre = nombre;
 		this.logo = logo;
 		this.descrip = des;
@@ -16,7 +19,7 @@ public class Alternativa {
 		return nombre;
 	}
 
-	public String getLogo() {
+	public Image getLogo() {
 		return logo;
 	}
 
