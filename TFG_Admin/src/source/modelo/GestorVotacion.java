@@ -134,22 +134,15 @@ public class GestorVotacion {
 	}
 	
 	
-	public ArrayList<Alternativa> obtAlternativasAlmacenadas(){
-		ArrayList<Alternativa> alter = new ArrayList<Alternativa>();
+	public ArrayList<String> obtNombreAlternativasAlmacenadas(){
+		ArrayList<String> alter = new ArrayList<String>();
 		String sentencia = "SELECT * FROM Alternativa";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				 Blob blob = r.getBlob("Logo");
-				 byte[] data = blob.getBytes(1, (int)blob.length());
-				 BufferedImage img = null;
-				 try {
-					img = ImageIO.read(new ByteArrayInputStream(data));
-					Alternativa a = new Alternativa(r.getString("Nombre"), img, r.getString("Descripcion"));
-					alter.add(a);
-				} catch (IOException e) {e.printStackTrace();}
+				alter.add(r.getString("Alternativa"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -158,7 +151,7 @@ public class GestorVotacion {
 		return alter;
 	}
 	
-	public ArrayList<String> obtAlternativasInscritas(int CodV){
+	private ArrayList<String> obtNombreAlternativasInscritas(int CodV){
 		ArrayList<String> alter = new ArrayList<String>();
 		String sentencia = "SELECT Alternativa FROM VotosGeneral WHERE CodV = ?";
 		PreparedStatement ps;
@@ -172,6 +165,37 @@ public class GestorVotacion {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return alter;
+	}
+	
+	
+	public ArrayList<Alternativa> obtAlternativasInscritas(int CodV){
+		ArrayList<Alternativa> alter = new ArrayList<Alternativa>();
+		ArrayList<String> nomAlter = obtNombreAlternativasInscritas(CodV);
+		String sentencia = "SELECT * FROM Alternativa WHERE Nombre = ?";
+		PreparedStatement ps;
+		for (int i = 0; i < nomAlter.size(); i++) {
+			String act = nomAlter.get(i);
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setString(1, act);
+				ResultSet r = SGBD.getConexion().Select(ps);
+				while (r.next()) {
+					Blob blob = r.getBlob("Logo");
+					byte[] data = blob.getBytes(1, (int) blob.length());
+					BufferedImage img = null;
+					try {
+						img = ImageIO.read(new ByteArrayInputStream(data));
+						Alternativa a = new Alternativa(r.getString("Nombre"), img, r.getString("Descripcion"));
+						alter.add(a);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return alter;
 	}

@@ -36,7 +36,7 @@ public class SistemaDeVotaciones {
 		
 	}
 	
-	public void generarVotacion(String Provincia, ArrayList<String> alternativasParaLaVotacion){
+	public void generarVotacion(String Comunidad, ArrayList<String> alternativasParaLaVotacion){
 		
 	}
 

@@ -33,7 +33,7 @@ public class GestorGenerar {
 		this.codVotacion = codVotacion;
 	}
 	
-	public void crearVotacion(String descrip){
+	private void crearVotacion(String descrip){
 		int codV = crearCodigoVotacion();
 		String sentencia = "INSERT INTO Votacion(Cod,Descripcion) VALUES (?,?)";
 		PreparedStatement ps;
@@ -68,18 +68,21 @@ public class GestorGenerar {
 	}
 	
 	
-	public void generarVotacion(String Provincia, ArrayList<Alternativa> l){
-		
-		addVotantes(Provincia);
-		//obtColegiosDeLosVotantes()
-		addAlternativas(l);
+	public void generarVotacion(String Comunidad, ArrayList<String> nomAlter, String descripcionVotacion){
+		crearVotacion(descripcionVotacion);
+		addVotantes(Comunidad);
+		ArrayList<String> coles = obtColegios(Comunidad);
+		addAlternativas(nomAlter,coles);
 	}
 	
 	public void addVotantesNuevos(ArrayList<String> l){
 		//TODO Clase Votante o hacer con split
 	}
 	
-	private void addVotantes(String Provincia){
+	private void addVotantes(String Comunidad){
+		PreparedStatement ps;
+		String sentencia;
+		
 		
 	}
 	
@@ -104,23 +107,96 @@ public class GestorGenerar {
 		}
 	}
 	
-	private void addAlternativas( ArrayList<Alternativa> l){
-		for(int i=0; i< l.size();i++){
-			Alternativa act = l.get(i);
-			String sentencia = "INSERT INTO VotosGeneral(CodV, Alternativa) VALUES (?,?)";
-			PreparedStatement ps;
-			try {
-				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
-				ps.setInt(1, getCodVotacion());
-				ps.setString(2, act.getNombre());
-				SGBD.getConexion().Update(ps);
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
+	
+	private void addAlternativas( ArrayList<String> alter,ArrayList<String> coles){
+		for(int i=0; i< alter.size();i++){
+			String act = alter.get(i);
+			for(int j=0; j<coles.size();j++){
+				String coleAct = coles.get(j);
+				int n = obtNumMesas(coleAct);
+				addAlterEnMesas(n, act, coleAct);
 			}
-			//obtColegiosDeLosVotantes()
-			//TODO Añadir cada alternativa por cada mesa de cada colego
+			addAlterGeneral(act);
 		}
 	}
+	
+	private ArrayList<String> obtColegios(String comunidad){
+		PreparedStatement ps=null;
+		String sentencia;
+		ArrayList<String> cole = new ArrayList<String>();
+		if(comunidad.equals("todas")){
+		sentencia =
+		"SELECT NomColegio FROM ColegioElectoral";
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			} catch (SQLException e) {e.printStackTrace();}
+		}else{
+			sentencia ="SELECT NomColegio FROM ColegioElectoral AS c INNER JOIN Localidad AS l ON c.Localidad = l.Nombre WHERE l.Comunidad = ?";
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setString(1, comunidad);
+				} catch (SQLException e) {e.printStackTrace();}
+		}
+		ResultSet r = SGBD.getConexion().Select(ps);
+		try {
+			while (r.next()){
+				cole.add(r.getString("Alternativa"));
+			}
+		} catch (SQLException e) {e.printStackTrace();}
+		return cole;
+	}
+	
+	
+	private void addAlterGeneral(String alter){
+		PreparedStatement ps;
+		String sentencia;
+		sentencia = "INSERT INTO VotosGeneral(CodV, Alternativa) VALUES (?,?)";
+		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setInt(1, getCodVotacion());
+			ps.setString(2, alter);
+			SGBD.getConexion().Update(ps);
+		} catch (SQLException e) {e.printStackTrace();
+		}
+	}
+	
+	
+	private int obtNumMesas(String Colegio){
+		PreparedStatement ps;
+		String sentencia;
+		ResultSet r=null;
+		int n=0;
+		sentencia = "SELECT MAX(Numero) FROM MesaElectoral WHERE NomColegio = ?";
+		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setString(1, Colegio);
+			 r = SGBD.getConexion().Select(ps);
+		} catch (SQLException e) {e.printStackTrace();}
+		try {
+			while (r.next()){
+				n=r.getInt("Numero");
+			}
+		} catch (SQLException e) {e.printStackTrace();}
+		return n;
+	}
+	
+	private void addAlterEnMesas(int n, String alter, String cole){
+		PreparedStatement ps;
+		String sentencia;
+		for(int i=1; i<=n;i++){
+			sentencia = "INSERT INTO VotosMesa(NumMesa, Alternativa, NomColegio, CodV) VALUES (?,?,?,?)";
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setInt(1, i);
+				ps.setString(2, alter);
+				ps.setString(3, cole);
+				ps.setInt(4, getCodVotacion());
+				SGBD.getConexion().Update(ps);
+			} catch (SQLException e) {e.printStackTrace();
+			}
+		}
+		
+	}
+	
 
 }
