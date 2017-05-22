@@ -3,12 +3,14 @@ package source.modelo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import source.bd.SGBD;
 
@@ -76,8 +78,28 @@ public class GestorGenerar {
 		addAlternativas(nomAlter,Comunidad);
 	}
 	
-	public void addVotantesNuevos(ArrayList<String> l){
-		//TODO Clase Votante o hacer con split
+	public void addVotantesNuevos(String ruta){
+		Scanner entrada;
+		try {
+			entrada = new Scanner(new FileReader(ruta));
+			while (entrada.hasNext()) {
+			String[] datos = null;
+			String linea= entrada.nextLine();
+			datos = linea.split(",");
+				String sentencia = "INSERT INTO Votante(Dni, Nombre, Apellidos, Domicilio, NomCalle) VALUES (?,?,?,?,?)";
+				PreparedStatement ps;
+				try {
+					ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+					for(int i=0; i<datos.length; i++){
+						ps.setString(i+1, datos[i]);
+					}
+					SGBD.getConexion().Update(ps);
+				} catch (SQLException e) {e.printStackTrace();
+				}
+			}
+		} catch (FileNotFoundException e) {e.printStackTrace();
+		}
+		
 	}
 	
 	private void addVotantes(String Comunidad){

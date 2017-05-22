@@ -36,8 +36,8 @@ public class SistemaDeVotaciones {
 		
 	}
 	
-	public void generarVotacion(String Comunidad, ArrayList<String> alternativasParaLaVotacion){
-		
+	public void generarVotacion(String Comunidad, ArrayList<String> alternativasParaLaVotacion,String descripcionVotacion){
+		GestorGenerar.getGenerar().generarVotacion(Comunidad, alternativasParaLaVotacion, descripcionVotacion);
 	}
 
 	public ArrayList<Votacion> obtVotacionesSinRealizar(){
@@ -45,11 +45,11 @@ public class SistemaDeVotaciones {
 	}
 	
 	public void addVotanes(String ruta){
-		
+		GestorGenerar.getGenerar().addVotantesNuevos(ruta);
 	}
 	
 	public void addAlternativa(String nombre, String descrip, String rutafoto){
-		
+		GestorGenerar.getGenerar().addAlternativaNueva(nombre, descrip, rutafoto);
 	}
 	
 	
