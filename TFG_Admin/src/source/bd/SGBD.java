@@ -106,7 +106,7 @@ public class SGBD {
     /*********************************
      * M�todo para cerrar la consula *
      *********************************/
-    static void cerrarSelect(ResultSet rs) {
+    public static void cerrarSelect(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();

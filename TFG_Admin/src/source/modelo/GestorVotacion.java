@@ -103,8 +103,8 @@ public class GestorVotacion {
 			while (r.next()){
 				Votacion v = new Votacion(r.getInt("codV"), r.getString("Descripcion"));
 				codVotaciones.add(v);
-				
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,6 +126,7 @@ public class GestorVotacion {
 				Votacion v = new Votacion(r.getInt("Cod"), r.getString("Descripcion"));
 				codVotaciones.add(v);
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,6 +145,7 @@ public class GestorVotacion {
 			while (r.next()){
 				alter.add(r.getString("Alternativa"));
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,6 +164,7 @@ public class GestorVotacion {
 			while (r.next()){
 				alter.add(r.getString("Alternativa"));
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -193,6 +196,7 @@ public class GestorVotacion {
 						e.printStackTrace();
 					}
 				}
+				SGBD.getConexion().cerrarSelect(r);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

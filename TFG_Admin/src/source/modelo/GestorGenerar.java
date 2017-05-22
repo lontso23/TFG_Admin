@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import source.bd.SGBD;
 
@@ -58,6 +59,7 @@ public class GestorGenerar {
 			while (r.next()){
 				 nuevoCod=r.getInt("codV");				
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
 			
 			e.printStackTrace();
@@ -71,8 +73,7 @@ public class GestorGenerar {
 	public void generarVotacion(String Comunidad, ArrayList<String> nomAlter, String descripcionVotacion){
 		crearVotacion(descripcionVotacion);
 		addVotantes(Comunidad);
-		ArrayList<String> coles = obtColegios(Comunidad);
-		addAlternativas(nomAlter,coles);
+		addAlternativas(nomAlter,Comunidad);
 	}
 	
 	public void addVotantesNuevos(ArrayList<String> l){
@@ -80,13 +81,106 @@ public class GestorGenerar {
 	}
 	
 	private void addVotantes(String Comunidad){
-		PreparedStatement ps;
-		String sentencia;
-		
+		if(Comunidad.equals("todas")){
+			addVotantesCompletos();
+		}else{
+			addVotantesPorComunidad(Comunidad);
+		}
 		
 	}
 	
+	private void addVotantesPorComunidad(String Comunidad){
+		PreparedStatement ps=null;
+		String sentencia;
+		String dni="";
+		ArrayList<String> coles = obtColegios(Comunidad);
+		for(int i=0; i< coles.size();i++){
+			String coleAct = coles.get(i);
+			sentencia="SELECT Dni FROM Votante AS v INNER JOIN Calle AS c ON v.NomCalle = c.Nombre WHERE c.NomColegio = ?";
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setString(1, coleAct);
+				SGBD.getConexion().Select(ps);
+			} catch (SQLException e) {e.printStackTrace();}
+			ResultSet r = SGBD.getConexion().Select(ps);
+			try {
+				while (r.next()){
+					dni=r.getString("DNI");
+				}
+				SGBD.getConexion().cerrarSelect(r);
+			} catch (SQLException e) {e.printStackTrace();}
+			añadirVotanteFinal(dni, coleAct);
+		}
+	}
+	
+	
+	
+	private void addVotantesCompletos(){
+		PreparedStatement ps=null;
+		String sentencia;
+		String dni="";
+		String nomColegio="";
+		String nomCalle;
+		try {
+			sentencia = "SELECT Dni, NomCalle FROM Votante";
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			SGBD.getConexion().Select(ps);
+			
+		} catch (SQLException e) {e.printStackTrace();}
+		ResultSet r = SGBD.getConexion().Select(ps);
+		try {
+			while (r.next()){
+				dni=r.getString("DNI");
+				nomCalle = r.getString("NomCalle");
+				nomColegio = obtColegioDesdeCalle(nomCalle);
+			}
+			SGBD.getConexion().cerrarSelect(r);
+		} catch (SQLException e) {e.printStackTrace();}
+		añadirVotanteFinal(dni, nomColegio);
+	}
 
+	private void añadirVotanteFinal(String dni, String nomColegio){
+		PreparedStatement ps;
+		String sentencia;
+		sentencia = "INSERT INTO VotosPersona(DniP, NumMesa, NomColegio, CodV) VALUES (?,?,?,?)";
+		int numMaxMesas = obtNumMesas(nomColegio);
+		Random r = new Random();
+		int n=1;
+		while(n!=0){
+			n = r.nextInt(numMaxMesas);
+		}
+		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setString(1, dni);
+			ps.setInt(2, n);
+			ps.setString(3, nomColegio);
+			ps.setInt(4, getCodVotacion());
+			SGBD.getConexion().Update(ps);
+		} catch (SQLException e) {e.printStackTrace();
+		}
+	}
+	
+	private String obtColegioDesdeCalle(String calle){
+		PreparedStatement ps=null;
+		String sentencia;
+		String nomColegio="";
+		try {
+			sentencia = "SELECT NomColegio FROM Calle WHERE Nombre = ?";
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setString(1, calle);
+			SGBD.getConexion().Select(ps);
+		} catch (SQLException e) {e.printStackTrace();}
+		ResultSet r = SGBD.getConexion().Select(ps);
+		try {
+			while (r.next()){
+				nomColegio=r.getString("NomColegio");
+			}
+			SGBD.getConexion().cerrarSelect(r);
+		} catch (SQLException e) {e.printStackTrace();}
+		return nomColegio;
+	}
+	
+	
 	public void addAlternativaNueva(String nombre, String descrip, String rutafoto){
 		String sentencia = "INSERT INTO Alternativa(Nombre, Logo, Descripcion) VALUES (?,?,?)";
 		File f = new File(rutafoto);
@@ -108,7 +202,8 @@ public class GestorGenerar {
 	}
 	
 	
-	private void addAlternativas( ArrayList<String> alter,ArrayList<String> coles){
+	private void addAlternativas( ArrayList<String> alter,String comunidad){
+		ArrayList<String> coles = obtColegios(comunidad);
 		for(int i=0; i< alter.size();i++){
 			String act = alter.get(i);
 			for(int j=0; j<coles.size();j++){
@@ -142,7 +237,9 @@ public class GestorGenerar {
 			while (r.next()){
 				cole.add(r.getString("Alternativa"));
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
+		
 		return cole;
 	}
 	
@@ -176,6 +273,7 @@ public class GestorGenerar {
 			while (r.next()){
 				n=r.getInt("Numero");
 			}
+			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
 		return n;
 	}
