@@ -24,15 +24,15 @@ public class SistemaDeVotaciones {
 		GestorVotacion.getGVotacion().detener();
 	}
 	
-	public void obtHistorico(int codV, Date Fecha){
+	public void obtHistorico(int codV, String rutaPdf){
 		
 	}
 	
-	public void obtResultadosGenerales(int codV, Date Fecha){
+	public void obtResultadosGenerales(int codV, String rutaPdf){
 		
 	}
 	
-	public void obtActasLocales(int codV, Date Fecha){
+	public void obtActasLocales(int codV, String rutaPdf){
 		
 	}
 	

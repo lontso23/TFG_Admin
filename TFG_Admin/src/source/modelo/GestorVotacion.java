@@ -153,7 +153,7 @@ public class GestorVotacion {
 		return alter;
 	}
 	
-	private ArrayList<String> obtNombreAlternativasInscritas(int CodV){
+	public ArrayList<String> obtNombreAlternativasInscritas(int CodV){
 		ArrayList<String> alter = new ArrayList<String>();
 		String sentencia = "SELECT Alternativa FROM VotosGeneral WHERE CodV = ?";
 		PreparedStatement ps;
