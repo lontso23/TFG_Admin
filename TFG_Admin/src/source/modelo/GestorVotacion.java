@@ -58,7 +58,7 @@ public class GestorVotacion {
 
 		java.util.Date d = new java.util.Date(); 
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
-		String sentencia = "UPDATE Votacion SET Activa S, Date ? WHERE CodV = ?";
+		String sentencia = "UPDATE Votacion SET Activa = S, Date ? WHERE CodV = ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
@@ -74,7 +74,7 @@ public class GestorVotacion {
 	}
 	
 	public void detener(){
-		String sentencia = "UPDATE Votacion SET Activa N WHERE CodV = ?";
+		String sentencia = "UPDATE Votacion SET Activa = N WHERE CodV = ?";
 		
 		PreparedStatement ps;
 		try {
@@ -94,7 +94,7 @@ public class GestorVotacion {
 	public ArrayList<Votacion> obtVotacionesNoRealizadas(){
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
 		Date fecha = obtFechaInicial();
-		String sentencia = "SELECT Cod Descripcion FROM Votacion Where Date = ?";
+		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date = ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
@@ -116,7 +116,7 @@ public class GestorVotacion {
 		java.util.Date d = new java.util.Date(); 
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
-		String sentencia = "SELECT Cod Descripcion FROM Votacion Where Date > ?";
+		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date > ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);

@@ -59,7 +59,7 @@ public class GestorGenerar {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				 nuevoCod=r.getInt("codV");				
+				 nuevoCod=r.getInt("Cod");				
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
@@ -118,7 +118,7 @@ public class GestorGenerar {
 		ArrayList<String> coles = obtColegios(Comunidad);
 		for(int i=0; i< coles.size();i++){
 			String coleAct = coles.get(i);
-			sentencia="SELECT Dni FROM Votante AS v INNER JOIN Calle AS c ON v.NomCalle = c.Nombre WHERE c.NomColegio = ?";
+			sentencia="SELECT v.Dni FROM Votante AS v INNER JOIN Calle AS c ON v.NomCalle = c.Nombre WHERE c.NomColegio = ?";
 			try {
 				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 				ps.setString(1, coleAct);
@@ -243,12 +243,12 @@ public class GestorGenerar {
 		ArrayList<String> cole = new ArrayList<String>();
 		if(comunidad.equals("todas")){
 		sentencia =
-		"SELECT NomColegio FROM ColegioElectoral";
+		"SELECT Nombre FROM ColegioElectoral";
 			try {
 				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			} catch (SQLException e) {e.printStackTrace();}
 		}else{
-			sentencia ="SELECT NomColegio FROM ColegioElectoral AS c INNER JOIN Localidad AS l ON c.Localidad = l.Nombre WHERE l.Comunidad = ?";
+			sentencia ="SELECT c.Nombre FROM ColegioElectoral AS c INNER JOIN Localidad AS l ON c.Localidad = l.Nombre WHERE l.Comunidad = ?";
 			try {
 				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 				ps.setString(1, comunidad);
@@ -257,7 +257,7 @@ public class GestorGenerar {
 		ResultSet r = SGBD.getConexion().Select(ps);
 		try {
 			while (r.next()){
-				cole.add(r.getString("Alternativa"));
+				cole.add(r.getString("Nombre"));
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
