@@ -32,7 +32,7 @@ public class GestorResultados {
 				ps.setString(2, alternativas.get(i));
 				ResultSet r = SGBD.getConexion().Select(ps);
 				while (r.next()){
-					n=r.getInt("NumVotos");
+					n=r.getInt("SUM(NumVotos)");
 				}
 				SGBD.getConexion().cerrarSelect(r);
 			} catch (SQLException e) {e.printStackTrace();}
@@ -86,7 +86,7 @@ public class GestorResultados {
 			ps.setString(3, nomColegio);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				n=r.getInt("NumVotos");
+				n=r.getInt("SUM(NumVotos)");
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
