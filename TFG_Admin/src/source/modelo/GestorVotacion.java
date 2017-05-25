@@ -93,15 +93,14 @@ public class GestorVotacion {
 	
 	public ArrayList<Votacion> obtVotacionesNoRealizadas(){
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
-		Date fecha = obtFechaInicial();
-		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date = ?";
+		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date = '2099-01-01'";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
-			ps.setDate(1, fecha);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				Votacion v = new Votacion(r.getInt("codV"), r.getString("Descripcion"));
+				System.out.println(r.getInt("Cod")+" "+r.getString("Descripcion"));
+				Votacion v = new Votacion(r.getInt("Cod"), r.getString("Descripcion"));
 				codVotaciones.add(v);
 			}
 			SGBD.getConexion().cerrarSelect(r);
@@ -116,7 +115,7 @@ public class GestorVotacion {
 		java.util.Date d = new java.util.Date(); 
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
-		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date > ?";
+		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date < ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
@@ -143,7 +142,7 @@ public class GestorVotacion {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				alter.add(r.getString("Alternativa"));
+				alter.add(r.getString("Nombre"));
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
@@ -204,13 +203,20 @@ public class GestorVotacion {
 		return alter;
 	}
 	
-	private Date obtFechaInicial(){
+
+	/*private Date obtFechaInicial(){
+		java.util.Date utilDate = new java.util.Date();
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		return sqlDate;
+	}*/
+	
+	/*private java.util.Date obtFechaInicial(){
 		SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
-		String fecha ="0000-00-00";
-		Date f = null;
+		String fecha ="2099-01-01";
+		java.util.Date f = null;
 		try {
 
-		f = (Date) formatoDelTexto.parse(fecha);
+		f = (java.util.Date) formatoDelTexto.parse(fecha);
 
 		} catch (ParseException ex) {
 
@@ -219,5 +225,5 @@ public class GestorVotacion {
 		}
 		return f;
 	}
-
+*/
 }

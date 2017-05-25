@@ -36,18 +36,18 @@ public class GestorGenerar {
 		this.codVotacion = codVotacion;
 	}
 	
-	private void crearVotacion(String descrip){
+	public void crearVotacion(String descrip){
 		int codV = crearCodigoVotacion();
-		String sentencia = "INSERT INTO Votacion(Cod,Descripcion) VALUES (?,?)";
+		String sentencia = "INSERT INTO Votacion(Cod, Descripcion, Date, Activa) VALUES (?,?,'2099-01-01','N')";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ps.setInt(1, codV);
-			ps.setString(3,descrip);
+			ps.setString(2,descrip);
 			SGBD.getConexion().Update(ps);
 		} catch (SQLException e) {
 			
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class GestorGenerar {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				 nuevoCod=r.getInt("Cod");				
+				 nuevoCod=r.getInt("MAX(Cod)");				
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {
@@ -237,34 +237,48 @@ public class GestorGenerar {
 		}
 	}
 	
-	private ArrayList<String> obtColegios(String comunidad){
-		PreparedStatement ps=null;
-		String sentencia;
+	public ArrayList<String> obtColegios(String comunidad){
 		ArrayList<String> cole = new ArrayList<String>();
 		if(comunidad.equals("todas")){
-		sentencia =
-		"SELECT Nombre FROM ColegioElectoral";
-			try {
-				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
-			} catch (SQLException e) {e.printStackTrace();}
+		return todasLasComunidades(cole);
 		}else{
-			sentencia ="SELECT c.Nombre FROM ColegioElectoral AS c INNER JOIN Localidad AS l ON c.Localidad = l.Nombre WHERE l.Comunidad = ?";
-			try {
-				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
-				ps.setString(1, comunidad);
-				} catch (SQLException e) {e.printStackTrace();}
+			return porComunidad(comunidad, cole);
 		}
-		ResultSet r = SGBD.getConexion().Select(ps);
+	}
+	
+	private ArrayList<String> todasLasComunidades(ArrayList<String> cole){
+		PreparedStatement ps=null;
+		String sentencia;
+		sentencia = "SELECT Nombre FROM ColegioElectoral";
 		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ResultSet r = SGBD.getConexion().Select(ps);
+			while (r.next()) {
+				cole.add(r.getString("Nombre"));
+			}
+			SGBD.getConexion().cerrarSelect(r);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			return cole;
+	}
+	
+	private ArrayList<String> porComunidad(String comunidad,ArrayList<String> cole){
+		PreparedStatement ps=null;
+		String sentencia;
+		sentencia ="SELECT c.Nombre FROM ColegioElectoral AS c INNER JOIN Localidad AS l ON c.NomLocalidad = l.Nombre WHERE l.Comunidad = ?";
+		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setString(1, comunidad);
+			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
 				cole.add(r.getString("Nombre"));
 			}
 			SGBD.getConexion().cerrarSelect(r);
-		} catch (SQLException e) {e.printStackTrace();}
-		
-		return cole;
+			} catch (SQLException e) {e.printStackTrace();}
+			return cole;
 	}
-	
 	
 	private void addAlterGeneral(String alter){
 		PreparedStatement ps;
@@ -280,7 +294,7 @@ public class GestorGenerar {
 	}
 	
 	
-	private int obtNumMesas(String Colegio){
+	public int obtNumMesas(String Colegio){
 		PreparedStatement ps;
 		String sentencia;
 		ResultSet r=null;
@@ -293,7 +307,7 @@ public class GestorGenerar {
 		} catch (SQLException e) {e.printStackTrace();}
 		try {
 			while (r.next()){
-				n=r.getInt("Numero");
+				n=r.getInt("MAX(Numero)");
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
