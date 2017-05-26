@@ -119,7 +119,7 @@ public class GestorResultados {
 			ps.setString(1, cole);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				res = r.getString("NomColegio");
+				res = r.getString("NomLocalidad");
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
