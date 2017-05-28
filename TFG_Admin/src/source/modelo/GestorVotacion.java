@@ -60,6 +60,7 @@ public class GestorVotacion {
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
 		String sentencia = "UPDATE Votacion SET Activa = 'S', Date = ? WHERE Cod = ?";
 		PreparedStatement ps;
+		
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ps.setDate(1, date2);
