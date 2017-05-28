@@ -54,20 +54,20 @@ public class GestorVotacion {
 
 
 
-	public void iniciar(int codV,String descrip, Date Fecha){
+	public void iniciar(int codV){
 
 		java.util.Date d = new java.util.Date(); 
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
-		String sentencia = "UPDATE Votacion SET Activa = S, Date ? WHERE CodV = ?";
+		String sentencia = "UPDATE Votacion SET Activa = 'S', Date = ? WHERE Cod = ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ps.setDate(1, date2);
 			ps.setInt(2, codV);
 			SGBD.getConexion().Update(ps);
+			System.out.println(ps.toString());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage()+" "+e.getSQLState());
 		}
 		setCodVotacion(codV);
 		setActiva(true);

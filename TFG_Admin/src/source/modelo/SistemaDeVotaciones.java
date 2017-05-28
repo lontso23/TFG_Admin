@@ -16,8 +16,8 @@ public class SistemaDeVotaciones {
 		return miSistema;
 	}
 
-	public void iniciar(int codV,String descrip, Date Fecha){
-		GestorVotacion.getGVotacion().iniciar(codV, descrip, Fecha);
+	public void iniciar(int codV){
+		GestorVotacion.getGVotacion().iniciar(codV);
 	}
 	
 	public void detener(){

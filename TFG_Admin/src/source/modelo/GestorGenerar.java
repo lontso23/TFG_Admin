@@ -123,9 +123,7 @@ public class GestorGenerar {
 				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 				ps.setString(1, coleAct);
 				SGBD.getConexion().Select(ps);
-			} catch (SQLException e) {e.printStackTrace();}
-			ResultSet r = SGBD.getConexion().Select(ps);
-			try {
+				ResultSet r = SGBD.getConexion().Select(ps);
 				while (r.next()){
 					dni=r.getString("DNI");
 				}
@@ -147,10 +145,7 @@ public class GestorGenerar {
 			sentencia = "SELECT Dni, NomCalle FROM Votante";
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			SGBD.getConexion().Select(ps);
-			
-		} catch (SQLException e) {e.printStackTrace();}
-		ResultSet r = SGBD.getConexion().Select(ps);
-		try {
+			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
 				dni=r.getString("DNI");
 				nomCalle = r.getString("NomCalle");
@@ -191,9 +186,7 @@ public class GestorGenerar {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ps.setString(1, calle);
 			SGBD.getConexion().Select(ps);
-		} catch (SQLException e) {e.printStackTrace();}
-		ResultSet r = SGBD.getConexion().Select(ps);
-		try {
+			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
 				nomColegio=r.getString("NomColegio");
 			}
@@ -237,7 +230,7 @@ public class GestorGenerar {
 		}
 	}
 	
-	public ArrayList<String> obtColegios(String comunidad){
+	private ArrayList<String> obtColegios(String comunidad){
 		ArrayList<String> cole = new ArrayList<String>();
 		if(comunidad.equals("todas")){
 		return todasLasComunidades(cole);
@@ -294,7 +287,7 @@ public class GestorGenerar {
 	}
 	
 	
-	public int obtNumMesas(String Colegio){
+	private int obtNumMesas(String Colegio){
 		PreparedStatement ps;
 		String sentencia;
 		ResultSet r=null;
