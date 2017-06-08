@@ -96,18 +96,17 @@ public class GestorVotacion {
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
 		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date = '2099-01-01'";
 		PreparedStatement ps;
+		SGBD.getConexion().conectar();
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ResultSet r = SGBD.getConexion().Select(ps);
 			while (r.next()){
-				System.out.println(r.getInt("Cod")+" "+r.getString("Descripcion"));
 				Votacion v = new Votacion(r.getInt("Cod"), r.getString("Descripcion"));
 				codVotaciones.add(v);
+				
 			}
 			SGBD.getConexion().cerrarSelect(r);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SQLException e) {e.printStackTrace();
 		}
 		return codVotaciones;
 	}
@@ -204,27 +203,24 @@ public class GestorVotacion {
 		return alter;
 	}
 	
-
-	/*private Date obtFechaInicial(){
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		return sqlDate;
-	}*/
-	
-	/*private java.util.Date obtFechaInicial(){
-		SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
-		String fecha ="2099-01-01";
-		java.util.Date f = null;
+	public ArrayList<String> obtComunidades(){
+		ArrayList<String> comu = new ArrayList<String>();
+		String sentencia = "SELECT Comunidad FROM Localidad";
+		PreparedStatement ps;
 		try {
-
-		f = (java.util.Date) formatoDelTexto.parse(fecha);
-
-		} catch (ParseException ex) {
-
-		ex.printStackTrace();
-
-		}
-		return f;
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ResultSet r = SGBD.getConexion().Select(ps);
+			while (r.next()){
+				String act=r.getString("Comunidad");
+				if(!comu.contains(act)){
+					comu.add(act);
+				}
+				
+			}
+			SGBD.getConexion().cerrarSelect(r);
+		} catch (SQLException e) {e.printStackTrace();}
+		return comu;
 	}
-*/
+
+	
 }

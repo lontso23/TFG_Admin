@@ -1,6 +1,8 @@
 package source.modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -45,6 +47,14 @@ public class GetToPDF {
 
 	public static GetToPDF getPdf(){
 		return miPDF;
+	}
+	
+	public void resultadosGeneral(ArrayList<String> alterYpunt, String rutaPdf,String descrip){
+		
+	}
+	
+	public void actasLocales(HashMap<String, ArrayList<String>> puntPorCole, String rutaPdf, String Localidad,String descrip){
+		
 	}
 	
 	public void generarPDF(ArrayList<String> l, String rute,File pdfNewFile){

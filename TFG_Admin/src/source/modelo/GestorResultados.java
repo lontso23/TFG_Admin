@@ -22,6 +22,7 @@ public class GestorResultados {
 
 	public void obtResultadosGenerales(int codV, String rutaPdf){
 		ArrayList<String> alternativas = GestorVotacion.getGVotacion().obtNombreAlternativasInscritas(codV);
+		ArrayList<String> resFinal = new ArrayList<String>();
 		for(int i=0;i<alternativas.size();i++){
 			String sentencia = "SELECT SUM(NumVotos) FROM VotosMesa WHERE CodV = ? AND Alternativa = ?";
 			PreparedStatement ps;
@@ -37,9 +38,26 @@ public class GestorResultados {
 				SGBD.getConexion().cerrarSelect(r);
 			} catch (SQLException e) {e.printStackTrace();}
 			actualizarVotosGeneral(alternativas.get(i),codV,n);
-			//TODO Pasar tambien la decrip de la votacion
-			//TODO lo del pdf: Pasar las alternativas con su num de votos
+			resFinal.add(alternativas.get(i)+","+n);
 		}
+		GetToPDF.getPdf().resultadosGeneral(resFinal, rutaPdf, getDescripVotacion(codV));
+	}
+	
+	
+	private String getDescripVotacion(int codV){
+		String sentencia = "SELECT Descripcion FROM Votacion WHERE Cod = ?";
+		PreparedStatement ps;
+		String n="";
+		try {
+			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+			ps.setInt(1, codV);
+			ResultSet r = SGBD.getConexion().Select(ps);
+			while (r.next()){
+				n=r.getString("Descripcion");
+			}
+			SGBD.getConexion().cerrarSelect(r);
+		} catch (SQLException e) {e.printStackTrace();}
+		return n;
 	}
 	
 	private void actualizarVotosGeneral(String alter, int codV,int numVotos){
@@ -64,15 +82,16 @@ public class GestorResultados {
 	        	String coleAct=colesPorLocal.get(LocalidadAct).get(i);
 	        	if(!puntPorCole.containsKey(coleAct)){
 					 ArrayList<String> puntAlter = new ArrayList<String>();
-					 colesPorLocal.put(coleAct, puntAlter);
+					puntPorCole.put(coleAct, puntAlter);
 				 }
 	        	for(int j=0;j<alternativas.size();j++){
 	        		String AlterYPuntuacion=obtPuntuacionAlterEnColegio(codV, coleAct, alternativas.get(j));
-	        		colesPorLocal.get(coleAct).add(AlterYPuntuacion);
+	        		puntPorCole.get(coleAct).add(AlterYPuntuacion);
 	        	}
 	        }
+	      GetToPDF.getPdf().actasLocales(puntPorCole, rutaPdf, LocalidadAct, getDescripVotacion(codV));
 	    }
-		//TODO pdf
+		
 	}
 	
 	private String obtPuntuacionAlterEnColegio(int codV, String nomColegio, String nomALter){
@@ -144,8 +163,8 @@ public class GestorResultados {
 		} catch (SQLException e) {e.printStackTrace();}
 		return coles;
 	}
-	public void obtHistorico(String codV, String rutaPdf){
-		
+	public void obtHistorico(int codV, String rutaPdf){
+		obtResultadosGenerales(codV, rutaPdf);
 	}
 
 	private void realizarEscrutinio(){

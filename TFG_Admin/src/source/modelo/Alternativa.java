@@ -9,9 +9,9 @@ public class Alternativa {
 	private Image logo;
 	private String descrip;
 	
-	public Alternativa(String n, Image logo, String des){
-		this.nombre = nombre;
-		this.logo = logo;
+	public Alternativa(String n, Image l, String des){
+		this.nombre = n;
+		this.logo = l;
 		this.descrip = des;
 	}
 

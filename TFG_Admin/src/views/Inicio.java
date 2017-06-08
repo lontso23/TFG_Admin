@@ -3,15 +3,27 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import source.bd.SGBD;
+import source.modelo.SistemaDeVotaciones;
+import source.modelo.Votacion;
 
 public class Inicio extends JFrame {
 
@@ -20,9 +32,11 @@ public class Inicio extends JFrame {
 	private  JPanel CrearHist;
 	private JPanel Votaciones; 
 	private JPanel pFlow; 
-	private JButton btnHist;
-	private JButton btncrear;
-	private JButton btnIniciar;
+	private JLabel btnHist;
+	private JLabel btncrear;
+	private JLabel btnIniciar;
+	private JLabel blanco;
+	private static Inicio miInit = new Inicio();
 	private JList lista;
 
 	/**
@@ -33,6 +47,7 @@ public class Inicio extends JFrame {
 			public void run() {
 				try {
 					Inicio frame = new Inicio();
+					SGBD.getConexion().conectar();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,6 +60,7 @@ public class Inicio extends JFrame {
 	 * Create the frame.
 	 */
 	public Inicio() {
+		setTitle("Panel de Administración");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 600);
 		contentPane = new Fondo();
@@ -53,87 +69,189 @@ public class Inicio extends JFrame {
 		contentPane.setBackgroundImage(contentPane.createImage("/resources/azul.jpg").getImage());
 		setContentPane(contentPane);
 		contentPane.add(getPanel(), BorderLayout.CENTER);
+		contentPane.add(getCrearHist(), BorderLayout.EAST);
+		contentPane.add(getVotaciones(),BorderLayout.WEST);
+		obtVotaciones();
 		this.setResizable(false);
 		
+	}
+	
+	public static Inicio getInicio(){
+		return miInit;
 	}
 	
 	
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new Fondo();
-			panel.add(getCrearHist(), BorderLayout.EAST);
-			panel.add(getVotaciones(),BorderLayout.WEST);
+			panel.add(getLista());
+			
 		}
 		return panel;
 	}
+	
+	
 
 	private JPanel getCrearHist() {
 		if (CrearHist == null) {
 			CrearHist = new Fondo();
-			CrearHist.setLayout(new GridLayout(2, 1));
+			CrearHist.setLayout(new GridLayout(4, 1));
 			CrearHist.add(getBtnHist());
+			CrearHist.add(getBlanco());
 			CrearHist.add(getBtnCrear());
 		}
 		return CrearHist;
+	}
+	
+	private JPanel getCabecera() {
+		if (pFlow == null) {
+			pFlow = new Fondo();
+			pFlow.setLayout(new GridLayout(1, 0, 0, 0));
+			
+			
+		}
+		return pFlow;
 	}
 	
 	private JPanel getVotaciones() {
 		if (Votaciones == null) {
 			Votaciones = new Fondo();
 			Votaciones.setLayout(new GridLayout(2, 1));
-			Votaciones.add(getLista());
 			Votaciones.add(getBtnIniciar());
 		}
 		return Votaciones;
 	}
 	
-	private JButton getBtnHist() {
+	private JLabel getBlanco() {
+		if (blanco == null) {
+			blanco = new JLabel(" ");
+			
+	}
+		return btnHist;
+	}
+	
+	
+	
+	private JLabel getBtnHist() {
 		if (btnHist == null) {
-			btnHist = new JButton("Historico de Votaciones");
-			btnHist.addActionListener(new ActionListener() {
+			btnHist = new JLabel("Historico de Votaciones");
+			btnHist.setIcon(new ImageIcon(Inicio.class.getResource("/resources/historia.png")));
+			btnHist.addMouseListener(new MouseListener() {
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					btnHist.setIcon(new ImageIcon(Inicio.class.getResource("/resources/historiaP.png")));
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {}
+				
+				
 			});
+	
 		
 	}
 		return btnHist;
 	}
 	
-	private JButton getBtnCrear() {
+	private JLabel getBtnCrear() {
 		if (btncrear == null) {
-			btncrear = new JButton("Crear Votación");
-			btncrear.addActionListener(new ActionListener() {
+			btncrear = new JLabel("Crear Votación");
+			btncrear.setIcon(new ImageIcon(Inicio.class.getResource("/resources/crear.png")));
+			btncrear.addMouseListener(new MouseListener() {
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
+				public void mouseClicked(MouseEvent e) {
+					CrearVotacion init = new CrearVotacion();
+					init.setVisible(true);
+					dispose();
 					
 				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					btncrear.setIcon(new ImageIcon(Inicio.class.getResource("/resources/crearP.png")));
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {}
+				
+				
 			});
 		
 	}
 		return btncrear;
 	}
 	
-	private JButton getBtnIniciar() {
+	private JLabel getBtnIniciar() {
 		if (btnIniciar == null) {
-			btnIniciar = new JButton("Iniciar");
-			btnIniciar.addActionListener(new ActionListener() {
+			btnIniciar = new JLabel("Iniciar");
+			btnIniciar.setForeground(UIManager.getColor("Button.highlight"));
+			btnIniciar.setIcon(new ImageIcon(Inicio.class.getResource("/resources/potencia.png")));
+			btnIniciar.addMouseListener(new MouseListener() {
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
+				public void mouseClicked(MouseEvent e) {
+					String select= (String) getLista().getSelectedValue();
+					String[]split = select.split("-");
+					System.out.println(split[0]+" "+split[1]);
 				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					btnIniciar.setIcon(new ImageIcon(Inicio.class.getResource("/resources/potenciaP.png")));
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {}
+				
+				
 			});
+	
 		
 	}
 		return btnIniciar;
 	}
+	
+	private void obtVotaciones(){
+		ArrayList<Votacion> v = new ArrayList<Votacion>();
+		v = SistemaDeVotaciones.getSistema().obtVotacionesSinRealizar();
+		DefaultListModel modelo = new DefaultListModel();
+		for(int i=0;i<v.size();i++){
+			int cod = v.get(i).getCod();
+			String descr= v.get(i).getDescrip();
+			modelo.addElement(cod + "-" + descr+"\n");				
+	}
+		getLista().setModel(modelo);
+		
+		
+	
+}
+	
 	
 	private JList getLista(){
 		if(lista==null){

@@ -3,6 +3,8 @@ package source.modelo;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import source.bd.SGBD;
+
 public class SistemaDeVotaciones {
 	
 	private static SistemaDeVotaciones miSistema = new SistemaDeVotaciones();
@@ -13,6 +15,7 @@ public class SistemaDeVotaciones {
 	}
 	
 	public static SistemaDeVotaciones getSistema(){
+		SGBD.getConexion().conectar();
 		return miSistema;
 	}
 
@@ -25,15 +28,15 @@ public class SistemaDeVotaciones {
 	}
 	
 	public void obtHistorico(int codV, String rutaPdf){
-		
+		GestorResultados.getGestorResultados().obtHistorico(codV, rutaPdf);
 	}
 	
 	public void obtResultadosGenerales(int codV, String rutaPdf){
-		
+		GestorResultados.getGestorResultados().obtResultadosGenerales(codV, rutaPdf);
 	}
 	
 	public void obtActasLocales(int codV, String rutaPdf){
-		
+		GestorResultados.getGestorResultados().obtActasLocales(codV, rutaPdf);
 	}
 	
 	public void generarVotacion(String Comunidad, ArrayList<String> alternativasParaLaVotacion,String descripcionVotacion){
@@ -52,5 +55,8 @@ public class SistemaDeVotaciones {
 		GestorGenerar.getGenerar().addAlternativaNueva(nombre, descrip, rutafoto);
 	}
 	
+	public ArrayList<String> obtComunidades(){
+	return GestorVotacion.getGVotacion().obtComunidades();
+	}
 	
 }

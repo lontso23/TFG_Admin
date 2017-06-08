@@ -5,9 +5,9 @@ public class Votacion {
 	private int cod;
 	private String descrip;
 	
-	public Votacion(int cod, String descrip){
-		cod = cod;
-		descrip = descrip;
+	public Votacion(int pcod, String pdescrip){
+		cod = pcod;
+		descrip = pdescrip;
 	}
 
 	public int getCod() {

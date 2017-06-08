@@ -15,7 +15,6 @@ public class SGBD {
 	
 	private static Connection conexion; 
 	private static Statement statement;
-	private String SentenciaSQL;
 	private ResultSet Resultado;
 	private static String  usuario = "Xmnieto012"; 
 	private static String password = "HdrNjBIwm";
