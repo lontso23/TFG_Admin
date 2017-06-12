@@ -1,27 +1,41 @@
 package views;
 
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTable;
-import javax.swing.ImageIcon;
+
+import source.modelo.SistemaDeVotaciones;
+
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 
 public class añadirAlter extends JFrame {
 
 	private Fondo panel;
 	private Fondo contentPane;
-	private JTable table;
-	private JTable table_1;
 	private ArrayList<String> almacenadas;
 	private ArrayList<String> inscritas;
-	private JButton btnSig;
-	private JButton btnAadirNuevo;
-	private JButton btnSiguiente;
+	private ArrayList<Checkbox> botones;
+	private JButton btnNewButton;
+	private JButton btnNewButton_1;
+	private String comunidad;
+	private String descripcionVotacion;
+	private JProgressBar dpb;
 	/**
 	 * Launch the application.
 	 */
@@ -49,59 +63,142 @@ public class añadirAlter extends JFrame {
 		contentPane.setBackgroundImage(contentPane.createImage("/resources/azul.jpg").getImage());
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		contentPane.add(getPanel(), BorderLayout.CENTER);
+		contentPane.add(getPanel(), BorderLayout.SOUTH);
 		almacenadas=new ArrayList<String>();
 		inscritas=new ArrayList<String>();
+		botones = new ArrayList<Checkbox>();
+		dpb=new JProgressBar(0, 1500);
+		llenarOpciones();
 		this.setResizable(false);
 	}
 	
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new Fondo();
-			panel.setLayout(null);
-			panel.add(getTable());
-			panel.add(getTable_1());
-			panel.add(getButton_1());
-			panel.add(getBtnAadirNuevo());
-			panel.add(getBtnSiguiente());
-			
+			panel.setLayout(new GridLayout(1, 0, 0, 0));
+			panel.add(getBtnNewButton());
+			panel.add(getBtnNewButton_1());
 		}
 		return panel;
 	}
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
-			table.setBounds(60, 433, 209, -380);
-		}
-		return table;
+	
+	public ArrayList<String> getAlmacenadas() {
+		return almacenadas;
 	}
-	private JTable getTable_1() {
-		if (table_1 == null) {
-			table_1 = new JTable();
-			table_1.setBounds(721, 441, 221, -368);
-		}
-		return table_1;
+
+	public void setAlmacenadas(ArrayList<String> almacenadas) {
+		this.almacenadas = almacenadas;
 	}
-	private JButton getButton_1() {
-		if (btnSig == null) {
-			btnSig = new JButton("");
-			btnSig.setBounds(475, 262, 37, 29);
-			btnSig.setIcon(new ImageIcon(Inicio.class.getResource("/resources/proximo.png")));
-		}
-		return btnSig;
+
+	public ArrayList<String> getInscritas() {
+		return inscritas;
 	}
-	private JButton getBtnAadirNuevo() {
-		if (btnAadirNuevo == null) {
-			btnAadirNuevo = new JButton("Añadir Nuevo");
-			btnAadirNuevo.setBounds(190, 470, 117, 29);
-		}
-		return btnAadirNuevo;
+
+	public void setInscritas(ArrayList<String> inscritas) {
+		this.inscritas = inscritas;
 	}
-	private JButton getBtnSiguiente() {
-		if (btnSiguiente == null) {
-			btnSiguiente = new JButton("Siguiente");
-			btnSiguiente.setBounds(746, 470, 117, 29);
-		}
-		return btnSiguiente;
+
+	
+	public ArrayList<Checkbox> getBotones() {
+		return botones;
 	}
+	
+
+	public String getComunidad() {
+		return comunidad;
+	}
+
+	public void setComunidad(String comunidad) {
+		this.comunidad = comunidad;
+	}
+
+	public String getDescripcionVotacion() {
+		return descripcionVotacion;
+	}
+
+	public void setDescripcionVotacion(String descripcionVotacion) {
+		this.descripcionVotacion = descripcionVotacion;
+	}
+
+	private JButton getBtnNewButton() {
+		if (btnNewButton == null) {
+			btnNewButton = new JButton("Añadir");
+			btnNewButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					AlterNueva alter = new AlterNueva();
+					alter.setVisible(true);
+					alter.setComunidad(getComunidad());
+					alter.setDescripcionVotacion(getDescripcionVotacion());
+					dispose();
+				}
+			});
+		}
+		return btnNewButton;
+	}
+	private JButton getBtnNewButton_1() {
+		if (btnNewButton_1 == null) {
+			btnNewButton_1 = new JButton("Siguiente");
+			btnNewButton_1.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					for(Checkbox act : botones){
+						if(act.getState()==true){
+							getInscritas().add(act.getName());
+
+						}
+						
+					}
+					if(getInscritas().contains("Si")&&getInscritas().contains("No")){
+						if(getInscritas().size()>=3){
+							String msj = "Si elige la ópcion de voto 'NO' y 'SI' no puede añadir más alternativas ";
+							JOptionPane.showMessageDialog(null,msj, "Mensaje de Error", JOptionPane.INFORMATION_MESSAGE);
+							getInscritas().clear();
+							System.out.println(getInscritas().size());
+						}
+						else{
+							SistemaDeVotaciones.getSistema().generarVotacion(getComunidad(), getInscritas(), getDescripcionVotacion());
+							Inicio frame = new Inicio();
+							frame.setVisible(true);
+							dispose();
+						}
+						
+					}else{
+						SistemaDeVotaciones.getSistema().generarVotacion(getComunidad(), getInscritas(), getDescripcionVotacion());
+						Inicio frame = new Inicio();
+						frame.setVisible(true);
+						dispose();
+					}
+					
+				}
+			});
+		}
+		return btnNewButton_1;
+	}
+	
+	
+	private void llenarOpciones(){
+		setAlmacenadas(SistemaDeVotaciones.getSistema().obtAlternativasAlmacenadas());
+		GridLayout gPanel = new GridLayout(getAlmacenadas().size()/2, 2);
+		gPanel.setVgap(0);
+		gPanel.setHgap(0);
+		JPanel gridPanel = new JPanel(gPanel);
+		gridPanel.setBackground(new Color(0,0,0,65));
+		for(int i=0; i<getAlmacenadas().size();i++){
+			String act = getAlmacenadas().get(i);
+			Checkbox lb = new Checkbox(act);
+			lb.setName(act);
+			Font fuente = new Font("Calibri", 3, 16);
+			lb.setFont(fuente);
+			lb.setForeground(Color.BLACK);
+			lb.setBackground(Color.white);
+			lb.setBounds(0, 0, 1, 1);
+			gridPanel.add(lb);
+			getBotones().add(lb);
+		}
+		getContentPane().add(gridPanel);
+	}
+	
 }

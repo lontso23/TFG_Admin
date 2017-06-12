@@ -157,7 +157,11 @@ public class AñadirVotantes extends JFrame {
 			btnSiguiente.setBounds(747, 484, 117, 29);
 			btnSiguiente.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					añadirAlter add = new añadirAlter();
+					add.setVisible(true);
+					add.setComunidad(getComunidad());
+					add.setDescripcionVotacion(getDescripcionVotacion());
+					dispose();
 				}
 			});
 		}

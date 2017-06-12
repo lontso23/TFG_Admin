@@ -36,7 +36,6 @@ public class Inicio extends JFrame {
 	private JLabel btncrear;
 	private JLabel btnIniciar;
 	private JLabel blanco;
-	private static Inicio miInit = new Inicio();
 	private JList lista;
 
 	/**
@@ -76,9 +75,6 @@ public class Inicio extends JFrame {
 		
 	}
 	
-	public static Inicio getInicio(){
-		return miInit;
-	}
 	
 	
 	private JPanel getPanel() {

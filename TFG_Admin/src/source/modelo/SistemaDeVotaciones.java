@@ -59,4 +59,8 @@ public class SistemaDeVotaciones {
 	return GestorVotacion.getGVotacion().obtComunidades();
 	}
 	
+	public ArrayList<String> obtAlternativasAlmacenadas(){
+		return GestorVotacion.getGVotacion().obtNombreAlternativasAlmacenadas();
+		}
+	
 }

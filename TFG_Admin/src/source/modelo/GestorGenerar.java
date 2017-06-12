@@ -128,7 +128,9 @@ public class GestorGenerar {
 					dni=r.getString("DNI");
 				}
 				SGBD.getConexion().cerrarSelect(r);
-			} catch (SQLException e) {e.printStackTrace();}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();}
 			añadirVotanteFinal(dni, coleAct);
 		}
 	}
@@ -162,9 +164,10 @@ public class GestorGenerar {
 		sentencia = "INSERT INTO VotosPersona(DniP, NumMesa, NomColegio, CodV) VALUES (?,?,?,?)";
 		int numMaxMesas = obtNumMesas(nomColegio);
 		Random r = new Random();
-		int n=1;
-		while(n!=0){
+		int n=0;
+		while(n==0){
 			n = r.nextInt(numMaxMesas);
+			
 		}
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
@@ -173,7 +176,9 @@ public class GestorGenerar {
 			ps.setString(3, nomColegio);
 			ps.setInt(4, getCodVotacion());
 			SGBD.getConexion().Update(ps);
-		} catch (SQLException e) {e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
