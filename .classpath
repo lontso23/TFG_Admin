@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="TFG_Admin/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/BD/mysql-connector-java-5.1.42/mysql-connector-java-5.1.42-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/Codigo/lib/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/Codigo/lib/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/Codigo/lib/itext-5.4.2/itextpdf-5.4.2.jar"/>
+	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/Codigo/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="/Users/mikellontso/Documents/UPV/TFG/Codigo/lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="TFG_Admin/bin"/>
 </classpath>

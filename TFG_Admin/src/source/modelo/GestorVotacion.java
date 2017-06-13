@@ -66,7 +66,7 @@ public class GestorVotacion {
 			ps.setDate(1, date2);
 			ps.setInt(2, codV);
 			SGBD.getConexion().Update(ps);
-			System.out.println(ps.toString());
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage()+" "+e.getSQLState());
 		}
@@ -75,13 +75,14 @@ public class GestorVotacion {
 	}
 	
 	public void detener(){
-		String sentencia = "UPDATE Votacion SET Activa = N WHERE CodV = ?";
+		String sentencia = "UPDATE Votacion SET Activa = 'N' WHERE Cod = ?";
 		
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 			ps.setInt(1, getCodVotacion());
 			SGBD.getConexion().Update(ps);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

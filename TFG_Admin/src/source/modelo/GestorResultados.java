@@ -20,7 +20,7 @@ public class GestorResultados {
 	}
 	
 
-	public void obtResultadosGenerales(int codV, String rutaPdf){
+	public ArrayList<String> obtListaResultadosGenerales(int codV){
 		ArrayList<String> alternativas = GestorVotacion.getGVotacion().obtNombreAlternativasInscritas(codV);
 		ArrayList<String> resFinal = new ArrayList<String>();
 		for(int i=0;i<alternativas.size();i++){
@@ -40,7 +40,32 @@ public class GestorResultados {
 			actualizarVotosGeneral(alternativas.get(i),codV,n);
 			resFinal.add(alternativas.get(i)+","+n);
 		}
-		GetToPDF.getPdf().resultadosGeneral(resFinal, rutaPdf, getDescripVotacion(codV));
+		
+		return resFinal;
+	}
+	
+	public void obtResultadosGenerales(int codV,String rutaPdf){
+		ArrayList<String> alternativas = GestorVotacion.getGVotacion().obtNombreAlternativasInscritas(codV);
+		ArrayList<String> resFinal = new ArrayList<String>();
+		for(int i=0;i<alternativas.size();i++){
+			String sentencia = "SELECT NumVotos FROM VotosGeneral WHERE CodV = ? AND Alternativa = ?";
+			PreparedStatement ps;
+			int n=0;
+			try {
+				ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
+				ps.setInt(1, codV);
+				ps.setString(2, alternativas.get(i));
+				ResultSet r = SGBD.getConexion().Select(ps);
+				while (r.next()){
+					n=r.getInt("NumVotos");
+				}
+				SGBD.getConexion().cerrarSelect(r);
+			} catch (SQLException e) {e.printStackTrace();}
+			resFinal.add(alternativas.get(i)+","+n);
+			GetToPDF.getPdf().resultadosGeneral(resFinal, rutaPdf, getDescripVotacion(codV));
+		}
+		
+		
 	}
 	
 	

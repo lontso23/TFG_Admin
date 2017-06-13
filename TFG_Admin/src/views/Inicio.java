@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import source.bd.SGBD;
+import source.modelo.Cronometro;
 import source.modelo.SistemaDeVotaciones;
 import source.modelo.Votacion;
 
@@ -93,21 +94,11 @@ public class Inicio extends JFrame {
 			CrearHist = new Fondo();
 			CrearHist.setLayout(new GridLayout(4, 1));
 			CrearHist.add(getBtnHist());
-			CrearHist.add(getBlanco());
 			CrearHist.add(getBtnCrear());
 		}
 		return CrearHist;
 	}
 	
-	private JPanel getCabecera() {
-		if (pFlow == null) {
-			pFlow = new Fondo();
-			pFlow.setLayout(new GridLayout(1, 0, 0, 0));
-			
-			
-		}
-		return pFlow;
-	}
 	
 	private JPanel getVotaciones() {
 		if (Votaciones == null) {
@@ -118,13 +109,6 @@ public class Inicio extends JFrame {
 		return Votaciones;
 	}
 	
-	private JLabel getBlanco() {
-		if (blanco == null) {
-			blanco = new JLabel(" ");
-			
-	}
-		return btnHist;
-	}
 	
 	
 	
@@ -208,7 +192,13 @@ public class Inicio extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					String select= (String) getLista().getSelectedValue();
 					String[]split = select.split("-");
-					System.out.println(split[0]+" "+split[1]);
+					VotacionActiva act = new VotacionActiva();
+					SistemaDeVotaciones.getSistema().iniciar(Integer.valueOf(split[0]));
+					act.setCodVotacion(Integer.valueOf(split[0]));
+					act.setDescripcion(split[1]);
+					act.setVisible(true);
+					Cronometro.getCronometro().empezar();
+					dispose();
 				}
 				
 				@Override

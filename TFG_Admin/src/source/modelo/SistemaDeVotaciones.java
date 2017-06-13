@@ -35,6 +35,10 @@ public class SistemaDeVotaciones {
 		GestorResultados.getGestorResultados().obtResultadosGenerales(codV, rutaPdf);
 	}
 	
+	public ArrayList<String> obtListaResultadosGenerales(int codV){
+		return GestorResultados.getGestorResultados().obtListaResultadosGenerales(codV);
+	}
+	
 	public void obtActasLocales(int codV, String rutaPdf){
 		GestorResultados.getGestorResultados().obtActasLocales(codV, rutaPdf);
 	}
