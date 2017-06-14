@@ -114,7 +114,6 @@ public class CrearVotacion extends JFrame {
 				public void itemStateChanged(ItemEvent e) {
 					if (e.getSource()==comboBox) {
 			            String seleccionado=(String)comboBox.getSelectedItem();
-			            System.out.println(comboBox.getSelectedItem());
 			            if(!seleccionado.equals("Seleccione una opcion")){
 			            	setComunidad(seleccionado);
 			            }
@@ -148,7 +147,6 @@ public class CrearVotacion extends JFrame {
 					AñadirVotantes vota = new AñadirVotantes();
 					vota.setComunidad(getComunidad());
 					vota.setDescripcionVotacion(getTextField().getText());
-					System.out.println(vota.getComunidad()+" "+vota.getDescripcionVotacion());
 					vota.setVisible(true);
 				}
 			});

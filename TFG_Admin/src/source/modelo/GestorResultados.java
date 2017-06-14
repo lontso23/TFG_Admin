@@ -114,6 +114,7 @@ public class GestorResultados {
 	        		puntPorCole.get(coleAct).add(AlterYPuntuacion);
 	        	}
 	        }
+	        
 	      GetToPDF.getPdf().actasLocales(puntPorCole, rutaPdf, LocalidadAct, getDescripVotacion(codV));
 	    }
 		

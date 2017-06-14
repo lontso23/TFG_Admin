@@ -103,7 +103,7 @@ public class GestorGenerar {
 	}
 	
 	private void addVotantes(String Comunidad){
-		if(Comunidad.equals("todas")){
+		if(Comunidad.equals("Todas")){
 			addVotantesCompletos();
 		}else{
 			addVotantesPorComunidad(Comunidad);
@@ -152,10 +152,11 @@ public class GestorGenerar {
 				dni=r.getString("DNI");
 				nomCalle = r.getString("NomCalle");
 				nomColegio = obtColegioDesdeCalle(nomCalle);
+				añadirVotanteFinal(dni, nomColegio);
 			}
 			SGBD.getConexion().cerrarSelect(r);
 		} catch (SQLException e) {e.printStackTrace();}
-		añadirVotanteFinal(dni, nomColegio);
+		
 	}
 
 	private void añadirVotanteFinal(String dni, String nomColegio){
@@ -202,7 +203,7 @@ public class GestorGenerar {
 	
 	
 	public void addAlternativaNueva(String nombre, String descrip, String rutafoto){
-		String sentencia = "INSERT INTO Alternativa(Nombre, Logo, Descripcion) VALUES (?,?,?)";
+		String sentencia = "INSERT INTO Alternativa(Nombre, Logo, Descrip) VALUES (?,?,?)";
 		File f = new File(rutafoto);
 		FileInputStream fis;
 		try {
@@ -237,7 +238,7 @@ public class GestorGenerar {
 	
 	private ArrayList<String> obtColegios(String comunidad){
 		ArrayList<String> cole = new ArrayList<String>();
-		if(comunidad.equals("todas")){
+		if(comunidad.equals("Todas")){
 		return todasLasComunidades(cole);
 		}else{
 			return porComunidad(comunidad, cole);

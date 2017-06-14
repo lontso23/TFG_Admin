@@ -191,6 +191,7 @@ public class AlterNueva extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					System.out.println(getNombreAlter().getText()+" "+ getTxtDescripcion().getText()+" "+ getRutaLogoAlter());
 					SistemaDeVotaciones.getSistema().addAlternativa(getNombreAlter().getText(), getTxtDescripcion().getText(), getRutaLogoAlter());
 					añadirAlter add = new añadirAlter();
 					add.setVisible(true);

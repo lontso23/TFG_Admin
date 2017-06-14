@@ -16,10 +16,16 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
 import source.modelo.Cronometro;
+import source.modelo.SistemaDeVotaciones;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.awt.event.ActionEvent;
 
 public class Resultados extends JFrame {
 
@@ -57,7 +63,7 @@ public class Resultados extends JFrame {
 			panel = new Fondo();
 			panel.setLayout(new BorderLayout(0, 0));
 			panel.add(getPGrafico(), BorderLayout.CENTER);
-			panel.add(getBotones(),BorderLayout.SOUTH);
+			panel.add(getBotones(),BorderLayout.EAST);
 			
 		}
 		return panel;
@@ -84,12 +90,38 @@ public class Resultados extends JFrame {
 	private JButton getBtnRgenerales() {
 		if (btnRgenerales == null) {
 			btnRgenerales = new JButton("R.Generales");
+			btnRgenerales.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser filechooser = new JFileChooser();
+					int returnVal = filechooser.showSaveDialog(Resultados.this);
+				    if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = filechooser.getSelectedFile();
+					SistemaDeVotaciones.getSistema().obtResultadosGenerales(getCodVotacion(),file.getAbsolutePath());
+					
+				    } else {
+				    	System.out.println("error ");
+				    }
+				}
+			});
 		}
 		return btnRgenerales;
 	}
 	private JButton getBtnActasLocales() {
 		if (btnActasLocales == null) {
 			btnActasLocales = new JButton("Actas Locales");
+			btnActasLocales.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser filechooser = new JFileChooser();
+					int returnVal = filechooser.showSaveDialog(Resultados.this);
+				    if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = filechooser.getSelectedFile();
+					SistemaDeVotaciones.getSistema().obtActasLocales(getCodVotacion(),file.getAbsolutePath());
+					
+				    } else {
+				    	System.out.println("error ");
+				    }
+				}
+			});
 		}
 		return btnActasLocales;
 	}
@@ -118,12 +150,9 @@ public class Resultados extends JFrame {
 	
 	private void crearGrafico(){
 		DefaultPieDataset data = new DefaultPieDataset();
-		System.out.println(getResFinal().size()+" "+getResFinal());
         for(int i=0;i<getResFinal().size();i++){
-        	System.out.println("LLEGO GRAFICO "+getResFinal().get(i));
         	String[]split = getResFinal().get(i).split(",");
         	data.setValue(split[0], Integer.valueOf(split[1]));
-        	System.out.println(split[0]+" "+ Integer.valueOf(split[1]));
         }
 
         JFreeChart chart = ChartFactory.createPieChart(

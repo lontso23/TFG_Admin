@@ -51,6 +51,10 @@ public class SistemaDeVotaciones {
 		return GestorVotacion.getGVotacion().obtVotacionesNoRealizadas();
 	}
 	
+	public ArrayList<Votacion> obtVotacionesFinalizadas(){
+		return GestorVotacion.getGVotacion().obtVotacionesFinalizadas();
+	}
+	
 	public void addVotanes(String ruta){
 		GestorGenerar.getGenerar().addVotantesNuevos(ruta);
 	}

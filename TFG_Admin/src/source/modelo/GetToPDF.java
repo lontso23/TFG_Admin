@@ -51,10 +51,116 @@ public class GetToPDF {
 	
 	public void resultadosGeneral(ArrayList<String> alterYpunt, String rutaPdf,String descrip){
 		
+		rutaPdf=rutaPdf+"_RGenerales.pdf";
+		
+		try{
+		Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(rutaPdf));
+
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("No such file was found to generate the PDF "
+                    + "(No se encontró el fichero para generar el pdf)" + fileNotFoundException);
+        }
+	        document.open();
+	        document.addTitle("Resultados Generales "+descrip);
+	        document.addSubject("Using iText (usando iText)");
+	        document.addKeywords("Java, PDF, iText");
+	        document.addAuthor("SEV-MK");
+	        
+	        Chunk chunk = new Chunk("Resultados Generales \n"+descrip, chapterFont);
+            chunk.setBackground(BaseColor.GRAY);
+            Chapter chapter = new Chapter(new Paragraph(chunk), 1);
+            chapter.setNumberDepth(0);
+            Paragraph paragraphE = new Paragraph("");
+            DottedLineSeparator dottedline = new DottedLineSeparator();
+            dottedline.setOffset(-2);
+            dottedline.setGap(2f);
+            paragraphE.add(dottedline);
+            chapter.addSection(paragraphE);
+            PdfPTable table = new PdfPTable(2);
+            PdfPCell columnHeader;
+            
+            columnHeader = new PdfPCell(new Phrase("Alternativa"));
+            columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(columnHeader);
+            columnHeader = new PdfPCell(new Phrase("Numero de votos"));
+            columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(columnHeader);
+            table.setHeaderRows(1);
+            Section paragraphMore = chapter.addSection(paragraphE);
+            for (int row = 0; row < alterYpunt.size(); row++) {
+
+				String[] split = alterYpunt.get(row).split(",");
+				table.addCell(split[0]);
+				table.addCell(split[1]);
+                
+            }
+            paragraphMore.add(table);
+            document.add(chapter);
+            document.close();
+		} catch (DocumentException documentException) {
+	        System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
+	    }
+			
 	}
 	
 	public void actasLocales(HashMap<String, ArrayList<String>> puntPorCole, String rutaPdf, String Localidad,String descrip){
+		rutaPdf=rutaPdf+"_"+Localidad+"_ResLocales.pdf";
 		
+		try{
+		Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(rutaPdf));
+
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("No such file was found to generate the PDF "
+                    + "(No se encontró el fichero para generar el pdf)" + fileNotFoundException);
+        }
+	        document.open();
+	        document.addTitle("Resultados Generales "+descrip);
+	        document.addSubject("Using iText (usando iText)");
+	        document.addKeywords("Java, PDF, iText");
+	        document.addAuthor("SEV-MK");
+	        
+	        Chunk chunk = new Chunk("Resultados "+Localidad+"\n "+descrip, chapterFont);
+            chunk.setBackground(BaseColor.GRAY);
+            Chapter chapter = new Chapter(new Paragraph(chunk), 1);
+            chapter.setNumberDepth(0);
+            Paragraph paragraphE = new Paragraph("");
+            DottedLineSeparator dottedline = new DottedLineSeparator();
+            dottedline.setOffset(-2);
+            dottedline.setGap(2f);
+            paragraphE.add(dottedline);
+            chapter.addSection(paragraphE);
+            
+            for (String cole :  puntPorCole.keySet()) {
+            	
+            	Paragraph paragraphL = new Paragraph(cole, subcategoryFont);
+            	chapter.addSection(paragraphL);
+            	PdfPTable table = new PdfPTable(2);
+                PdfPCell columnHeader;
+                
+                columnHeader = new PdfPCell(new Phrase("Alternativa"));
+                columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(columnHeader);
+                columnHeader = new PdfPCell(new Phrase("Numero de votos"));
+                columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(columnHeader);
+                table.setHeaderRows(1);
+                for(int i=0; i<puntPorCole.get(cole).size();i++){
+                	String[] split = puntPorCole.get(cole).get(i).split(",");
+    				table.addCell(split[0]);
+    				table.addCell(split[1]);
+                }
+                paragraphL.add(table);
+            }
+            
+            document.add(chapter);
+            document.close();
+		} catch (DocumentException documentException) {
+	        System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
+	    }
 	}
 	
 	public void generarPDF(ArrayList<String> l, String rute,File pdfNewFile){

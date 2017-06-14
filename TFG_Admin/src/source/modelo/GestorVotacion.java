@@ -116,7 +116,7 @@ public class GestorVotacion {
 		java.util.Date d = new java.util.Date(); 
 		java.sql.Date date2 = new java.sql.Date(d.getTime());
 		ArrayList<Votacion> codVotaciones = new ArrayList<Votacion>();
-		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date < ?";
+		String sentencia = "SELECT Cod, Descripcion FROM Votacion Where Date <= ?";
 		PreparedStatement ps;
 		try {
 			ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);

@@ -32,11 +32,9 @@ public class Inicio extends JFrame {
 	private Fondo contentPane;
 	private  JPanel CrearHist;
 	private JPanel Votaciones; 
-	private JPanel pFlow; 
 	private JLabel btnHist;
 	private JLabel btncrear;
 	private JLabel btnIniciar;
-	private JLabel blanco;
 	private JList lista;
 
 	/**
@@ -120,7 +118,9 @@ public class Inicio extends JFrame {
 				
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
+					Historico his = new Historico();
+					his.setVisible(true);
+					dispose();
 					
 				}
 				
