@@ -48,7 +48,7 @@ public class GestorResultados {
 		ArrayList<String> alternativas = GestorVotacion.getGVotacion().obtNombreAlternativasInscritas(codV);
 		ArrayList<String> resFinal = new ArrayList<String>();
 		for(int i=0;i<alternativas.size();i++){
-			String sentencia = "SELECT NumVotos FROM VotosGeneral WHERE CodV = ? AND Alternativa = ?";
+			String sentencia = "SELECT SUM(NumVotos) FROM VotosMesa WHERE CodV = ? AND Alternativa = ?";
 			PreparedStatement ps;
 			int n=0;
 			try {
@@ -57,12 +57,15 @@ public class GestorResultados {
 				ps.setString(2, alternativas.get(i));
 				ResultSet r = SGBD.getConexion().Select(ps);
 				while (r.next()){
-					n=r.getInt("NumVotos");
+					n=r.getInt("SUM(NumVotos)");
 				}
 				SGBD.getConexion().cerrarSelect(r);
 			} catch (SQLException e) {e.printStackTrace();}
+			actualizarVotosGeneral(alternativas.get(i), codV, n);
 			resFinal.add(alternativas.get(i)+","+n);
+			GetToPDF.getPdf().setCodV(codV);
 			GetToPDF.getPdf().resultadosGeneral(resFinal, rutaPdf, getDescripVotacion(codV));
+			
 		}
 		
 		

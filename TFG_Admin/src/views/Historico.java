@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -15,6 +16,9 @@ import javax.swing.border.EmptyBorder;
 
 import source.modelo.SistemaDeVotaciones;
 import source.modelo.Votacion;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.awt.event.ActionEvent;
 
 public class Historico extends JFrame {
 
@@ -24,6 +28,7 @@ public class Historico extends JFrame {
 	private JPanel CrearHist;
 	private JButton btnLocal;
 	private JButton btnGeneral;
+	private JButton volver;
 
 	
 	/**
@@ -39,6 +44,7 @@ public class Historico extends JFrame {
 		setContentPane(contentPane);
 		contentPane.add(getPanel(), BorderLayout.CENTER);
 		contentPane.add(getCrearHist(), BorderLayout.EAST);
+		contentPane.add(getVolver(),BorderLayout.SOUTH);
 		obtVotaciones();
 		this.setResizable(false);
 		
@@ -88,6 +94,21 @@ public class Historico extends JFrame {
 	public JButton getBtnLocal() {
 		if(btnLocal==null){
 			btnLocal = new JButton("Actas Locales");
+			btnLocal.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String select= (String) getLista().getSelectedValue();
+					String[]split = select.split("-");
+					JFileChooser filechooser = new JFileChooser();
+					int returnVal = filechooser.showSaveDialog(Historico.this);
+				    if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = filechooser.getSelectedFile();
+					SistemaDeVotaciones.getSistema().obtActasLocales(Integer.valueOf(split[0]),file.getAbsolutePath());
+					
+				    } else {
+				    	System.out.println("error ");
+				    }
+				}
+			});
 			
 		}
 		return btnLocal;
@@ -96,9 +117,42 @@ public class Historico extends JFrame {
 	public JButton getBtnGeneral() {
 		if(btnGeneral==null){
 			btnGeneral = new JButton("Resultados Generales");
+			btnGeneral.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String select= (String) getLista().getSelectedValue();
+					String[]split = select.split("-");
+					JFileChooser filechooser = new JFileChooser();
+					int returnVal = filechooser.showSaveDialog(Historico.this);
+				    if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = filechooser.getSelectedFile();
+					SistemaDeVotaciones.getSistema().obtResultadosGenerales(Integer.valueOf(split[0]),file.getAbsolutePath());
+					
+				    } else {
+				    	System.out.println("error ");
+				    }
+				}
+			});
 		}
 		return btnGeneral;
 	}
+
+	public JButton getVolver() {
+		if(volver == null){
+			volver = new JButton("Volver");
+			volver.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Inicio i = new Inicio();
+					i.setVisible(true);
+					dispose();
+				}
+			});
+			
+		}
+		return volver;
+	}
+	
+	
 	
 	
 

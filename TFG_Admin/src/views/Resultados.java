@@ -37,6 +37,7 @@ public class Resultados extends JFrame {
 	private JPanel pGrafico;
 	private JPanel botones;
 	private ArrayList<String> resFinal;
+	private JButton volver;
 
 	
 
@@ -64,6 +65,7 @@ public class Resultados extends JFrame {
 			panel.setLayout(new BorderLayout(0, 0));
 			panel.add(getPGrafico(), BorderLayout.CENTER);
 			panel.add(getBotones(),BorderLayout.EAST);
+			panel.add(getVolver(),BorderLayout.SOUTH);
 			
 		}
 		return panel;
@@ -164,6 +166,22 @@ public class Resultados extends JFrame {
         
         ChartPanel grafico = new ChartPanel(chart);
         getPGrafico().add(grafico);
+	}
+	
+	public JButton getVolver() {
+		if(volver == null){
+			volver = new JButton("Volver");
+			volver.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Inicio i = new Inicio();
+					i.setVisible(true);
+					dispose();
+				}
+			});
+			
+		}
+		return volver;
 	}
 	
 }

@@ -3,6 +3,13 @@ package source.modelo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -23,13 +30,17 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
-import java.io.*; 
 
-import source.bd.SGBD;
+
+import java.io.*;
+import java.net.MalformedURLException; 
+
+
 
 public class GetToPDF {
 	
 	private static GetToPDF miPDF = new GetToPDF();
+	private int codV;
     private static final Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA, 26, Font.BOLDITALIC);
     private static final Font paragraphFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
         
@@ -49,6 +60,18 @@ public class GetToPDF {
 		return miPDF;
 	}
 	
+	
+	
+	public int getCodV() {
+		return codV;
+	}
+
+
+	public void setCodV(int codV) {
+		this.codV = codV;
+	}
+
+
 	public void resultadosGeneral(ArrayList<String> alterYpunt, String rutaPdf,String descrip){
 		
 		rutaPdf=rutaPdf+"_RGenerales.pdf";
@@ -72,6 +95,22 @@ public class GetToPDF {
             chunk.setBackground(BaseColor.GRAY);
             Chapter chapter = new Chapter(new Paragraph(chunk), 1);
             chapter.setNumberDepth(0);
+            Paragraph paragraphG = new Paragraph("");
+            chapter.addSection(paragraphG);
+            Image image;
+            String ruta= imagenGenerales(getCodV());
+            try {
+            	
+                image = Image.getInstance(ruta);  
+                image.setAbsolutePosition(2, 500);
+                paragraphG.add(image);
+            } catch (BadElementException ex) {
+                System.out.println("Image BadElementException" +  ex);
+            } catch (IOException ex) {
+                System.out.println("Image IOException " +  ex);
+            }
+            File fichero = new File(ruta);
+            fichero.delete();
             Paragraph paragraphE = new Paragraph("");
             DottedLineSeparator dottedline = new DottedLineSeparator();
             dottedline.setOffset(-2);
@@ -195,6 +234,7 @@ public class GetToPDF {
 		            // We add an image (Añadimos una imagen)
 		            Image image;
 		            try {
+		            	
 		                image = Image.getInstance(iTextExampleImage);  
 		                image.setAbsolutePosition(2, 150);
 		                chapter.add(image);
@@ -286,5 +326,31 @@ public class GetToPDF {
 		            System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
 		        }
 		    }
+	
+	private String imagenGenerales(int codV){
+		DefaultPieDataset data = new DefaultPieDataset();
+		ArrayList<String> rFinal = SistemaDeVotaciones.getSistema().obtListaResultadosGenerales(codV);
+		for(int i=0;i<rFinal.size();i++){
+        	String[]split = rFinal.get(i).split(",");
+        	data.setValue(split[0], Integer.valueOf(split[1]));
+        }
+
+        JFreeChart chart = ChartFactory.createPieChart(
+         "Grafico de los resultados Generales ", 
+         data, 
+         true, 
+         true, 
+         false);
+        
+        try {
+			ChartUtilities.saveChartAsPNG(new File("Rgeneral.png"), chart, 200, 200);
+		} catch (IOException e) {e.printStackTrace();}
+        
+        
+        return "Rgeneral.png";
+	}
+	
+	
+	
 
 }
