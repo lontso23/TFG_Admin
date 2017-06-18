@@ -126,12 +126,13 @@ public class GestorGenerar {
 				ResultSet r = SGBD.getConexion().Select(ps);
 				while (r.next()){
 					dni=r.getString("DNI");
+					añadirVotanteFinal(dni, coleAct);
 				}
 				SGBD.getConexion().cerrarSelect(r);
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();}
-			añadirVotanteFinal(dni, coleAct);
+			
 		}
 	}
 	

@@ -102,7 +102,6 @@ public class GetToPDF {
             try {
             	
                 image = Image.getInstance(ruta);  
-                image.setAbsolutePosition(2, 500);
                 paragraphG.add(image);
             } catch (BadElementException ex) {
                 System.out.println("Image BadElementException" +  ex);
@@ -112,10 +111,6 @@ public class GetToPDF {
             File fichero = new File(ruta);
             fichero.delete();
             Paragraph paragraphE = new Paragraph("");
-            DottedLineSeparator dottedline = new DottedLineSeparator();
-            dottedline.setOffset(-2);
-            dottedline.setGap(2f);
-            paragraphE.add(dottedline);
             chapter.addSection(paragraphE);
             PdfPTable table = new PdfPTable(2);
             PdfPCell columnHeader;
@@ -187,6 +182,19 @@ public class GetToPDF {
                 columnHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(columnHeader);
                 table.setHeaderRows(1);
+                Image image;
+                String ruta=graficoLocal(puntPorCole.get(cole));
+                try {
+                	
+                    image = Image.getInstance(ruta);  
+                    paragraphL.add(image);
+                } catch (BadElementException ex) {
+                    System.out.println("Image BadElementException" +  ex);
+                } catch (IOException ex) {
+                    System.out.println("Image IOException " +  ex);
+                }
+                File fichero = new File(ruta);
+                fichero.delete();
                 for(int i=0; i<puntPorCole.get(cole).size();i++){
                 	String[] split = puntPorCole.get(cole).get(i).split(",");
     				table.addCell(split[0]);
@@ -336,21 +344,41 @@ public class GetToPDF {
         }
 
         JFreeChart chart = ChartFactory.createPieChart(
-         "Grafico de los resultados Generales ", 
+         " ", 
          data, 
          true, 
          true, 
          false);
         
         try {
-			ChartUtilities.saveChartAsPNG(new File("Rgeneral.png"), chart, 200, 200);
+			ChartUtilities.saveChartAsPNG(new File("Rgeneral.png"), chart, 300, 300);
 		} catch (IOException e) {e.printStackTrace();}
         
         
         return "Rgeneral.png";
 	}
 	
-	
+	private String graficoLocal(ArrayList<String> l){
+		DefaultPieDataset data = new DefaultPieDataset();
+		for(int i=0;i<l.size();i++){
+        	String[]split = l.get(i).split(",");
+        	data.setValue(split[0], Integer.valueOf(split[1]));
+        }
+
+        JFreeChart chart = ChartFactory.createPieChart(
+         " ", 
+         data, 
+         true, 
+         true, 
+         false);
+        
+        try {
+			ChartUtilities.saveChartAsPNG(new File("RLocal.png"), chart, 200, 200);
+		} catch (IOException e) {e.printStackTrace();}
+        
+        
+        return "RLocal.png";
+	}
 	
 
 }

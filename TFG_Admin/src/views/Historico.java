@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -97,13 +98,20 @@ public class Historico extends JFrame {
 			btnLocal.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String select= (String) getLista().getSelectedValue();
+					if(select!=null){
 					String[]split = select.split("-");
 					JFileChooser filechooser = new JFileChooser();
 					int returnVal = filechooser.showSaveDialog(Historico.this);
 				    if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = filechooser.getSelectedFile();
 					SistemaDeVotaciones.getSistema().obtActasLocales(Integer.valueOf(split[0]),file.getAbsolutePath());
-					
+					String msj = "Actas generada correctamente ";
+					JOptionPane.showMessageDialog(null,msj, "Mensaje Informativo", JOptionPane.INFORMATION_MESSAGE);
+				    }
+				    else{
+				    	String msj = "Seleccione una votación ";
+						JOptionPane.showMessageDialog(null,msj, "Mensaje de error", JOptionPane.ERROR_MESSAGE);
+				    }
 				    } else {
 				    	System.out.println("error ");
 				    }
@@ -120,13 +128,20 @@ public class Historico extends JFrame {
 			btnGeneral.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String select= (String) getLista().getSelectedValue();
+					if(select!=null){
 					String[]split = select.split("-");
 					JFileChooser filechooser = new JFileChooser();
 					int returnVal = filechooser.showSaveDialog(Historico.this);
 				    if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = filechooser.getSelectedFile();
 					SistemaDeVotaciones.getSistema().obtResultadosGenerales(Integer.valueOf(split[0]),file.getAbsolutePath());
-					
+					String msj = "Acta generada correctamente ";
+					JOptionPane.showMessageDialog(null,msj, "Mensaje Informativo", JOptionPane.INFORMATION_MESSAGE);
+				    }
+					else{
+				    	String msj = "Seleccione una votación ";
+						JOptionPane.showMessageDialog(null,msj, "Mensaje de error", JOptionPane.ERROR_MESSAGE);
+				    }
 				    } else {
 				    	System.out.println("error ");
 				    }

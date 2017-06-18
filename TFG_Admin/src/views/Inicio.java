@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -191,6 +192,7 @@ public class Inicio extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					String select= (String) getLista().getSelectedValue();
+					if(select!=null){
 					String[]split = select.split("-");
 					VotacionActiva act = new VotacionActiva();
 					SistemaDeVotaciones.getSistema().iniciar(Integer.valueOf(split[0]));
@@ -199,6 +201,10 @@ public class Inicio extends JFrame {
 					act.setVisible(true);
 					Cronometro.getCronometro().empezar();
 					dispose();
+					}else{
+						String msj = "Seleccione una votación ";
+						JOptionPane.showMessageDialog(null,msj, "Mensaje de error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 				
 				@Override
