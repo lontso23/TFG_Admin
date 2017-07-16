@@ -86,12 +86,17 @@ public class GestorGenerar {
 			String[] datos = null;
 			String linea= entrada.nextLine();
 			datos = linea.split(",");
-				String sentencia = "INSERT INTO Votante(Dni, Nombre, Apellidos, Domicilio, NomCalle) VALUES (?,?,?,?,?)";
+				String sentencia = "INSERT INTO Votante(Dni, Pin, Nombre, Apellidos, Domicilio, NomCalle) VALUES (?,?,?,?,?,?)";
 				PreparedStatement ps;
 				try {
 					ps = SGBD.getConexion().getConnection().prepareStatement(sentencia);
 					for(int i=0; i<datos.length; i++){
-						ps.setString(i+1, datos[i]);
+						if(i==1){
+							ps.setString(i+1, "1234");
+						}else{
+							ps.setString(i+1, datos[i]);
+						}
+						
 					}
 					SGBD.getConexion().Update(ps);
 				} catch (SQLException e) {e.printStackTrace();
