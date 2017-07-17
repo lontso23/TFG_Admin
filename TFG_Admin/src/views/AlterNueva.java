@@ -39,6 +39,7 @@ public class AlterNueva extends JFrame {
 	private JTextPane textPane;
 	private String comunidad;
 	private String descripcionVotacion;
+	private JButton btnVolver;
 
 	/**
 	 * Launch the application.
@@ -86,6 +87,7 @@ public class AlterNueva extends JFrame {
 			panel.add(getBtnFin());
 			panel.add(getLblLogo());
 			panel.add(getTextPane());
+			panel.add(getBtnVolver());
 		
 		}
 		return panel;
@@ -218,5 +220,21 @@ public class AlterNueva extends JFrame {
 					+ "dimensión 102 x 102 o más pequeño.");
 		}
 		return textPane;
+	}
+	private JButton getBtnVolver() {
+		if (btnVolver == null) {
+			btnVolver = new JButton("Volver");
+			btnVolver.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					añadirAlter add = new añadirAlter();
+					add.setVisible(true);
+					add.setComunidad(getComunidad());
+					add.setDescripcionVotacion(getDescripcionVotacion());
+					dispose();
+				}
+			});
+			btnVolver.setBounds(105, 501, 117, 29);
+		}
+		return btnVolver;
 	}
 }
